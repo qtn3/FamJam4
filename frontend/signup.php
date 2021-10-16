@@ -1,3 +1,30 @@
+<?php
+session_start();
+require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
+$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+$channel = $connection->channel();
+
+$channel->queue_declare('username queue', false, false, false, false);
+
+if(isset($_POST['login'])){
+  $username= !empty($_POST['user_name'])?trim($_POST['user_name']):null;
+}
+
+$msg = new AMQPMessage($username);
+$channel->basic_publish($msg, '', 'username queue');
+
+echo " [x] Sent username\n";
+
+$channel->close();
+$connection->close();
+
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,7 +41,7 @@
   <body>
     <div class="main">
         <p class="sign" align="center">Sign up</p>
-        <form class="form1">
+        <form class="form1" action="signup.php" method="post">
           <input class="un " type="text" align="center" placeholder="Username">
           <input class="pass" type="password" align="center" placeholder="Password">
           <input class="pass" type="password" align="center" placeholder="Email">

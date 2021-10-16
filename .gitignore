@@ -1,2 +1,5 @@
 package-lock.json
 package.json
+composer.json
+composer.lock
+vendor

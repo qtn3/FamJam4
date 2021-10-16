@@ -1,3 +1,38 @@
+<?php
+session_start();
+require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
+
+
+if(isset($_POST['submit'])){
+  $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+$channel = $connection->channel();
+
+
+$channel->queue_declare('username queue', false, false, false, false);
+  $username= !empty($_POST['user_name'])?trim($_POST['user_name']):null;
+  $password= !empty($_POST['pass_word'])?trim($_POST['pass_word']):null;
+
+  $credential = array("username"=>$username, "password"=>$password);
+  
+  $msg = new AMQPMessage(json_encode($credential));
+$channel->basic_publish($msg, '', 'username queue');
+
+echo " [x] Sent credential\n";
+
+
+$channel->close();
+$connection->close();
+}
+
+
+
+
+?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,10 +49,11 @@
   <body>
     <div class="main">
         <p class="sign" align="center">Sign in</p>
-        <form class="form1">
-          <input class="un " type="text" align="center" placeholder="Username">
-          <input class="pass" type="password" align="center" placeholder="Password">
-          <a class="submit" align="center">Sign in</a>
+        <form class="form1" action="login.php" method="post">
+          <input class="un " type="text" align="center" placeholder="Username" name="user_name">
+          <input class="pass" type="password" align="center" placeholder="Password" name="pass_word">
+          <!-- <button class="submit" align="center" type="submit" name="login_form">Sign in</button> -->
+          <input type="submit" name="submit">
           <br>
           <br>
           <a class="submit" align="center" href="signup.html">Sign up</a>
