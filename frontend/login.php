@@ -5,7 +5,6 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 
-
 if(isset($_POST['submit'])){
   $connection = new AMQPStreamConnection('192.168.194.150', 5672, 'dp75', '1234', 'dp75');
   $channel = $connection->channel();
@@ -20,14 +19,21 @@ if(isset($_POST['submit'])){
   $msg = new AMQPMessage(json_encode($credential));
   $channel->basic_publish($msg, '', 'username queue');
 
-  echo " [x] Sent credential\n";
-
 
   $channel->close();
   $connection->close();
 }
 
+include 'loginSignalReceive.php';
+$signal=$_SESSION['signalLogin'];
 
+if($signal == 'true'){
+  header('location:homepage.html');
+}
+else{
+  echo "Username/Password incorrect!";
+  header('location:login.php');
+}
 
 
 ?>
