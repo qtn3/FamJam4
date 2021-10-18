@@ -7,7 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 
 if(isset($_POST['submit'])){
-  $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+  $connection = new AMQPStreamConnection('192.168.194.191', 5672, 'dp75', '1234');
 $channel = $connection->channel();
 
 
