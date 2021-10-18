@@ -13,13 +13,20 @@ $channel->queue_declare('test queue', false, false, false, false);
 echo "Waiting for the message...";
 
 $callback = function($msg){
-    echo 'Got ', var_dump(json_decode($msg->body,true)), "\n";
+    $cread=json_decode($msg->body,true);
+    print_r($cread);
+    echo 'This is cred A ', $cread['A'], "\n";
+    echo 'This is cred B ', $cread['B'], "\n";
 };
+
 
 $channel->basic_consume('test queue','',false,true,false,false,$callback);
 while($channel->is_consuming()){
     $channel->wait();
 }
+
+
+
 $channel->close();
 $connection->close();
 

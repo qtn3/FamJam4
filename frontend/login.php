@@ -7,24 +7,24 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 
 if(isset($_POST['submit'])){
-  $connection = new AMQPStreamConnection('192.168.194.191', 5672, 'dp75', '1234');
-$channel = $connection->channel();
+  $connection = new AMQPStreamConnection('192.168.194.150', 5672, 'dp75', '1234', 'dp75');
+  $channel = $connection->channel();
 
 
-$channel->queue_declare('username queue', false, false, false, false);
+  $channel->queue_declare('username queue', false, false, false, false);
   $username= !empty($_POST['user_name'])?trim($_POST['user_name']):null;
   $password= !empty($_POST['pass_word'])?trim($_POST['pass_word']):null;
 
   $credential = array("username"=>$username, "password"=>$password);
   
   $msg = new AMQPMessage(json_encode($credential));
-$channel->basic_publish($msg, '', 'username queue');
+  $channel->basic_publish($msg, '', 'username queue');
 
-echo " [x] Sent credential\n";
+  echo " [x] Sent credential\n";
 
 
-$channel->close();
-$connection->close();
+  $channel->close();
+  $connection->close();
 }
 
 
@@ -53,10 +53,10 @@ $connection->close();
           <input class="un " type="text" align="center" placeholder="Username" name="user_name">
           <input class="pass" type="password" align="center" placeholder="Password" name="pass_word">
           <!-- <button class="submit" align="center" type="submit" name="login_form">Sign in</button> -->
-          <input type="submit" name="submit">
+          <input class="submit" type="submit" name="submit" value="Sign in">
           <br>
           <br>
-          <a class="submit" align="center" href="signup.html">Sign up</a>
+          <a class="submit" align="center" href="signup.php">Sign up</a>
           <p class="forgot" align="center"><a href="#">Forgot Password?</p>
         </form>                
     </div>

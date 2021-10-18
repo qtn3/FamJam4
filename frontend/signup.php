@@ -4,22 +4,26 @@ require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
-$channel = $connection->channel();
+if(isset($_POST['submit'])){
+  $connection = new AMQPStreamConnection('192.168.194.150', 5672, 'dp75', '1234', 'dp75');
+  $channel = $connection->channel();
 
-$channel->queue_declare('username queue', false, false, false, false);
 
-if(isset($_POST['login'])){
-  $username= !empty($_POST['user_name'])?trim($_POST['user_name']):null;
+  $channel->queue_declare('username queue', false, false, false, false);
+  $username= !empty($_POST['sign_up_name'])?trim($_POST['sign_up_name']):null;
+  $password= !empty($_POST['sign_up_pass'])?trim($_POST['sign_up_pass']):null;
+  $passwordHashed= password_hash($password, PASSWORD_BCRYPT);
+  $email= !empty($_POST['sign_up_email'])?trim($_POST['sign_up_email']):null;
+
+  $credential = array("username"=>$username, "password"=>$passwordHashed, "email"=>$email);
+  
+  $msg = new AMQPMessage(json_encode($credential));
+  $channel->basic_publish($msg, '', 'username queue');
+
+
+  $channel->close();
+  $connection->close();
 }
-
-$msg = new AMQPMessage($username);
-$channel->basic_publish($msg, '', 'username queue');
-
-echo " [x] Sent username\n";
-
-$channel->close();
-$connection->close();
 
 
 ?>
@@ -42,13 +46,13 @@ $connection->close();
     <div class="main">
         <p class="sign" align="center">Sign up</p>
         <form class="form1" action="signup.php" method="post">
-          <input class="un " type="text" align="center" placeholder="Username">
-          <input class="pass" type="password" align="center" placeholder="Password">
-          <input class="pass" type="password" align="center" placeholder="Email">
-          <a class="submit" align="center">Sign up</a>
+          <input class="un " type="text" align="center" name="sign_up_name" placeholder="Username">
+          <input class="pass" type="password" align="center" name="sign_up_pass" placeholder="Password">
+          <input class="pass" type="email" align="center" name="sign_up_email" placeholder="Email">
+          <input class="submit" type="submit" name="submit" value="Sign up">
           <br>
           <br>
-          <a class="submit" align="center" href="login.html">Sign in</a>
+          <a class="submit" align="center" href="login.php">Sign in</a>
         </form>                
     </div>
 
