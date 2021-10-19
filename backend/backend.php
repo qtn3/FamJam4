@@ -4,7 +4,7 @@ session_start();
 require '/home/qtn3/Desktop/FamJam4/db_connect/new.php';
 require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
 $conn = connect_db();
-
+$conn_string = "mysql:host=$sql_host;dbname=$sqll_database;charset=utf8mb4";
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -37,9 +37,10 @@ $callback = function($msg){
             exit();
         }
     }else{
-        $sql = 'Insert Into account (username, email, password) VALUES ("A", "B", "C")';
-        $sql = $conn->query($sql);
-        if ($sql) {
+	$db = new PDO($conn_string, $username, $password);
+        $sql = "INSERT INTO account (username, password, email) VALUES ('A', 'B', 'C')";
+        if ($db->query($sql)){
+        
             $signal='true';
             $channel->queue_declare('signal queue', false, false, false, false);
             $credential = array("username"=>$cread['username'], "password"=>$cread['password'], "email"=>$cread['email'], "signal"=>$signal);
