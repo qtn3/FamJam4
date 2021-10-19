@@ -20,20 +20,22 @@ if(isset($_POST['submit'])){
   $channel->basic_publish($msg, '', 'username queue');
 
 
+  include 'loginSignalReceive.php';
+  $signal=$_SESSION['signalLogin'];
+
+  if($signal == 'true'){
+    header('location:homepage.html');
+  }
+  else{
+    echo "Username/Password incorrect!";
+    header('location:login.php');
+  }
+
   $channel->close();
   $connection->close();
 }
 
-include 'loginSignalReceive.php';
-$signal=$_SESSION['signalLogin'];
 
-if($signal == 'true'){
-  header('location:homepage.html');
-}
-else{
-  echo "Username/Password incorrect!";
-  header('location:login.php');
-}
 
 
 ?>

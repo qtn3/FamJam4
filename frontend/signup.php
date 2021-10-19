@@ -21,21 +21,22 @@ if(isset($_POST['submit'])){
   $msg = new AMQPMessage(json_encode($credential));
   $channel->basic_publish($msg, '', 'username queue');
 
+  include 'registerSignalReceive.php';
+  $signal=$_SESSION['signalSignup'];
+
+  if($signal == 'true'){
+    header('location:homepage.html');
+  }
+  else{
+    echo "Account existed!";
+    header('location:signup.php');
+  }
 
   $channel->close();
   $connection->close();
 }
 
-include 'registerSignalReceive.php';
-$signal=$_SESSION['signalSignup'];
 
-if($signal == 'true'){
-  header('location:homepage.html');
-}
-else{
-  echo "Account existed!";
-  header('location:signup.php');
-}
 
 
 ?>

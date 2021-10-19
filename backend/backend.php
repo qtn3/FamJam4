@@ -1,9 +1,10 @@
 <?php
 namespace Acme\AmqpWrapper;
-require '/home/qtn3/Desktop/FamJam4/db_connect/database_conn.php';
-$conn = connect_db();
 session_start();
+require '/home/qtn3/Desktop/FamJam4/db_connect/new.php';
 require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
+$conn = connect_db();
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
