@@ -17,7 +17,7 @@ $callback = function($msg){
     $cread=json_decode($msg->body,true);
     // $_SESSION['signalSignup'] = $cred['signal'];
     if(count($cred == 2)){
-        $sql            = 'Select username From table Where username = $cread["username"]';
+        $sql            = 'Select username From account Where username = $cread["username"];
         $sql            = $conn->query($sql);
         $sql            = $sql->fetch_assoc();
         if ($sql) {
@@ -36,7 +36,7 @@ $callback = function($msg){
             exit();
         }
     }else{
-        $sql = 'Insert Into table (username, email, password) VALUES ("$cread["username"]", "$cread["password"]", "$cread["email"]")';
+        $sql = 'Insert Into account (username, email, password) VALUES ("$cread["username"]", "$cread["password"]", "$cread["email"]")';
         $sql = $conn->query($sql);
         if ($sql) {
             $signal='true';
