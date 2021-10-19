@@ -22,6 +22,7 @@ if(isset($_POST['submit'])){
   $channel->basic_publish($msg, '', 'username queue');
 
   include 'registerSignalReceive.php';
+  echo "works";
   $signal=$_SESSION['signalSignup'];
 
   if($signal == 'true'){

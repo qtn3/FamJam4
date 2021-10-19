@@ -1,7 +1,5 @@
 <?php
 namespace Acme\AmqpWrapper;
-session_start();
-require_once ('/home/qtn3/Desktop/FamJam4/vendor/autoload.php');
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 

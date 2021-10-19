@@ -13,11 +13,12 @@ $channel = $connection->channel();
 
 $channel->queue_declare('username queue', false, false, false, false);
 
+
 $callback = function($msg){
     $cread=json_decode($msg->body,true);
-    // $_SESSION['signalSignup'] = $cred['signal'];
-    if(count($cred == 2)){
-        $sql            = 'Select username From table Where username = $cread["username"]';
+    if(count($cread) == 2){
+        echo count($cread);
+        $sql            = 'Select username From account Where username = dp75';
         $sql            = $conn->query($sql);
         $sql            = $sql->fetch_assoc();
         if ($sql) {
@@ -36,7 +37,7 @@ $callback = function($msg){
             exit();
         }
     }else{
-        $sql = 'Insert Into table (username, email, password) VALUES ("$cread["username"]", "$cread["password"]", "$cread["email"]")';
+        $sql = 'Insert Into account (username, email, password) VALUES ("A", "B", "C")';
         $sql = $conn->query($sql);
         if ($sql) {
             $signal='true';
@@ -45,14 +46,15 @@ $callback = function($msg){
             $msg = new AMQPMessage(json_encode($credential));
             $channel->basic_publish($msg, '', 'signal queue');
             exit();
-        }else{
-            $signal='false';
-            $channel->queue_declare('signal queue', false, false, false, false);
-            $credential = array("username"=>$cread['username'], "password"=>$cread['password'], "email"=>$cread['email'], "signal"=>$signal);
-            $msg = new AMQPMessage(json_encode($credential));
-            $channel->basic_publish($msg, '', 'signal queue');
-            exit();
         }
+        // }else{
+        //     $signal='false';
+        //     $channel->queue_declare('signal queue', false, false, false, false);
+        //     $credential = array("username"=>"A", "password"=>"B", "email"=>"C", "signal"=>$signal);
+        //     $msg = new AMQPMessage(json_encode($credential));
+        //     $channel->basic_publish($msg, '', 'signal queue');
+        //     exit();
+        // }
     }
 };
 
